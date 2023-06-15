@@ -1,10 +1,17 @@
 /* Don't change the existing CSS. */
-
+#outer-box{
+  background-color: purple;
+}
 .box {
   background-color: blue;
   padding: 10px;
 }
-
+.inner-box{
+  background-color: red;
+}
+.white-text{
+  color: white;
+}
 p {
   color: yellow;
   margin: 0;
