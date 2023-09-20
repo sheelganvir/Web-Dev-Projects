@@ -23,7 +23,7 @@ const page = () => {
     <div>
       <h1>This is Home Page</h1>
       <button onClick={getImages} className='px-5 py-3 bg-green-800 text-white font-bold'>Get Images</button>
-      <div className='p--10'>
+      <div className='p-10'>
         {Images.map((elem,i)=>{
           return <img 
             key={i} 
@@ -37,6 +37,5 @@ const page = () => {
     </div> 
   )
 }
-
 export default page
   
