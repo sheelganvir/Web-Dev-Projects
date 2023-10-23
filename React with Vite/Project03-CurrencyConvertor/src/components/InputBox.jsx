@@ -44,7 +44,7 @@ function InputBox({
 
                         </option>))}
 
-                </select>
+                </select> 
             </div>
         </div>
     );
