@@ -21,3 +21,38 @@ let isLoggedIn = false
 
 console.log(typeof name);   //string
 console.log(typeof null);   //object
+
+/************************* TYPES OF DATATYPES ****************************/
+
+/*
+    1. Primitive
+        7 types: String, Number, Boolean, Null, Undefined, Symbol, BigInt
+
+    2. Reference (Non Primitive)
+        Array, Objects, Functions
+*/
+
+const id = Symbol('123')
+const anotherId = Symbol('123')
+
+console.log(id==anotherId);     //false
+
+const bigNumber = 34567897815566558n    //bigInt datatype
+
+/************************ Array, Objects, Functions **************************/
+
+/* 
+    Array:
+    const cricketers = ["Virat", "Dhoni", "Rahul"];
+
+    Object:
+    let myObj = {
+        name: "Sheel",
+        age: 20,
+    }
+
+    Function:
+    const myFunction = function(){
+        console.log("Hello Sheel")
+    }
+*/
