@@ -14,3 +14,4 @@ console.log(Instructor);
 //Change the key name
 const {Instructor: Ins} = course
 console.log(Ins);
+
