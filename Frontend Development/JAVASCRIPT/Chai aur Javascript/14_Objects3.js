@@ -7,7 +7,8 @@ const course = {
 // One way to console out 
 console.log(course.Instructor);
 
-//Another way to console out
+
+//DESTRUCTURING of object or Another way to console out
 const {Instructor} = course
 console.log(Instructor);
 
@@ -15,3 +16,20 @@ console.log(Instructor);
 const {Instructor: Ins} = course
 console.log(Ins);
 
+//We get APIs in the form of object or array
+
+/*API in the form of Object
+{
+    "name": "Sheel" 
+    "coursename": "JS"
+    "IsLoggedIn": false
+}
+*/
+
+/*API in the form of array
+[
+    {},
+    {},
+    {},    
+]
+*/
