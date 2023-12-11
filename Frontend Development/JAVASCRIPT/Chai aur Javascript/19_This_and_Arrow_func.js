@@ -1,4 +1,5 @@
 // this refers current context
+// Execution context of browser is windows
 
 const user = {
     username: "Sheel",
