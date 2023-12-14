@@ -1,4 +1,4 @@
-// if
+// ************** if ****************
 
 const isUserLoggedIn = true;
 if(isUserLoggedIn){
@@ -19,6 +19,8 @@ else{
 //     default:
 //         break;
 // }
+
+//logical operator : &&, ||
 
 const month = 3
 switch (month) {
