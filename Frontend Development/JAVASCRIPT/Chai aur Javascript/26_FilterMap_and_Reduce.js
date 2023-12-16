@@ -79,3 +79,26 @@ const myTotal = arr.reduce( function(acc, currval){
 },0)     // initial val of accumulator(acc) is set to 0
 console.log(myTotal);
 
+//same thing with arrow function
+const newTotal = arr.reduce( (acc,currval) => acc+currval, 0)
+console.log(newTotal);
+
+/********************************************************* */
+
+const shoppingCart = [
+   {
+      itemname: "js course",
+      price: 100
+   },
+   {
+      itemname: "react course",
+      price: 200
+   },
+   {
+      itemname: "c++ course",
+      price: 500
+   }
+]
+
+const priceToPay = shoppingCart.reduce((acc,item) => acc + item.price, 0)
+console.log(priceToPay);
