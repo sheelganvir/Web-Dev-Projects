@@ -69,3 +69,13 @@ const coding = ["js","ruby","java","python"]
    .filter((num) => num>= 40)
 console.log(newNumbers2);
 
+/************************Reduce in array***************** */
+// Here we have accumulator and cuurentvalue
+
+const arr = [1, 2, 3, 4];
+const myTotal = arr.reduce( function(acc, currval){
+   console.log(`acc: ${acc} and currval: ${currval}`);
+   return acc+currval   //return value will becomes the next accumulator
+},0)     // initial val of accumulator(acc) is set to 0
+console.log(myTotal);
+
