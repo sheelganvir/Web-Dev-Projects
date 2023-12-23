@@ -8,4 +8,18 @@
 <body style="background-color: #212121; color: #fff;">
     
 </body>
+<script>
+    // div creation
+    const div = document.createElement('div')
+    console.log(div);
+    div.className = "main";
+    div.id = Math.round(Math.random()*10+1)
+    div.setAttribute("title", "generatedd title")
+    div.style.backgroundColor = "orange"
+    div.style.Padding = "12px";
+    // div.innerText = "Chai aur Code"
+    const addText = document.createTextNode("Chai aur code")
+    div.appendChild(addText)
+    document.body.appendChild(div)
+</script>
 </html>
