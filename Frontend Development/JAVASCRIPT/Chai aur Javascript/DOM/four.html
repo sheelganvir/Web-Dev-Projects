@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chai</title>
+    <style>
+        body{
+            background-color: #212121; 
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <ul class="langauge">
+        <li>Javascript</li>
+    </ul>
+</body>
+<script>
+    //Adding and remove elements in DOM
+    function addLanguage(langName){
+        const li = document.createElement('li')
+        li.innerHTML = `${langName}`
+        document.querySelector('.language').appendChild(li)
+    }
+    addLanguage("Python")
+    addLanguage("Typescript")
+
+    function addOptiLanguage(langName){
+        const li = document.createElement('li')
+        li.appendChild(document.createTextNode(langName))
+        document.querySelector('.language').appendChild(li)
+    }
+    addOptiLanguage("Golang")
+</script>
+</html>
