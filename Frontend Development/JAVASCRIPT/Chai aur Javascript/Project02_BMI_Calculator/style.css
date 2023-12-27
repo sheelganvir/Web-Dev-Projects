@@ -1,10 +1,23 @@
 .container {
-    width: 575px;
-    height: 825px;
-  
-    background-color: #797978;
-    padding-left: 30px;
+    width: full;
+    height: full;
+    padding: 30px 30px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    flex-direction: column;
+    color: #363062;
+    font-family: sans-serif;
+    margin-bottom: 48px;
   }
+  body{
+    background-color: #F5F5F5
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
   #height,
   #weight {
     width: 150px;
@@ -12,36 +25,92 @@
     margin-top: 30px;
   }
   
-  #weight-guide {
-    margin-left: 75px;
-    margin-top: 25px;
-  }
-  
   #results {
     font-size: 35px;
-    margin-left: 90px;
+    padding: 5px 15px;
     margin-top: 20px;
-    color: rgb(241, 241, 241);
+    color: rgb(77, 76, 125);
+    text-align: center;
   }
   
   button {
     width: 150px;
     height: 35px;
-    margin-left: 90px;
     margin-top: 25px;
     background-color: #fff;
-    padding: 1px 30px;
     border-radius: 8px;
     color: #212121;
     text-decoration: none;
     border: 2px solid #212121;
-  
+    text-align: center;
     font-size: 25px;
   }
   
   h1 {
-    padding-left: 15px;
-    padding-top: 25px;
     
+    text-align: center;
+    justify-content: center;
+    margin: 5px;
   }
+
+  input{
+    border-radius: 8px;
+  }
+  
+  form{
+    display: flex;
+    flex-direction: column;
+    margin-top: 35px;
+  }
+
+  p{
+    margin: 5px;
+  }
+
+  
+
+.btn {
+    border: 0px solid #fff;
+    min-width: 350px;
+    min-height: 28px;
+    position: relative;
+    cursor: pointer;
+    letter-spacing: 2px;
+    position: relative;
+    transition: background-color 0.5s linear 0.5s;
+    align-items: center;
+    padding: 5px 2px;
+    font-size: x-large;
+    margin-bottom: 5px;
+}
+
+.btn-300::after {
+    content: "";
+    display: block;
+    box-shadow: 0 0 0 1px #363062;
+    background: none;
+    position: absolute;
+    inset: 0;
+    transition: scale() 100ms linear 0.3s;
+    border-radius: 8px;
+}
+
+.btn-300:hover::after {
+    opacity: 0;
+}
+
+.btn-300:hover {
+    background-color: #F99417;
+    
+}
+
+footer {
+    color: black;
+    font-family: sans-serif;
+    text-align: center;
+    margin-top: auto;
+    background-color: #F99417;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
   
