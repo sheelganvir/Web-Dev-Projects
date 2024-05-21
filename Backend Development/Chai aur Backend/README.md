@@ -48,4 +48,15 @@
    13) Copy and paste the below command in the top of index.js file
        ######
            require('dotenv').config()
-   14)
+   14) Now go to index.js file and change port variable inside app.listen as
+       ######
+            app.listen(process.env.PORT, () => {
+              console.log(`Example app listening on port ${port}`)
+            })
+   15) Now application is ready for production.
+   16) Now make a github repository for this application.
+   17) Before pushing the application in github create a .gitignore file. Add this in .gitignore file
+       ######
+             node_modules
+             .env
+   18) 
