@@ -44,7 +44,7 @@
        Therefore before deploying we need to install dotenv package using command
        ######
            npm i dotenv
-   12) Create .env file and write "PORT=3000" inside .env file
+   12) Create .env file and write "PORT=3000" inside .env file to setup environment variables
    13) Copy and paste the below command in the top of index.js file
        ######
            require('dotenv').config()
