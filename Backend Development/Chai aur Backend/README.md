@@ -59,4 +59,45 @@
        ######
              node_modules
              .env
-   18) 
+   18) Suppose we have a data in our database (use data given below). Now if we want to make a url where all this data is passed.
+       For this first copy and paste the below data in index.js file
+       ######
+             const githubData = {
+                 "id": "38587571019",
+                 "type": "WatchEvent",
+                 "actor": {
+                   "id": 85225156,
+                   "login": "Vikash-8090-Yadav",
+                   "display_login": "Vikash-8090-Yadav",
+                   "gravatar_id": "",
+                   "url": "https://api.github.com/users/Vikash-8090-Yadav",
+                   "avatar_url": "https://avatars.githubusercontent.com/u/85225156?"
+                 },
+                 "repo": {
+                   "id": 802029431,
+                   "name": "Web3-Plurality/demo-application",
+                   "url": "https://api.github.com/repos/Web3-Plurality/demo-application"
+                 },
+                 "payload": {
+                   "action": "started"
+                 },
+                 "public": true,
+                 "created_at": "2024-05-22T00:11:54Z",
+                 "org": {
+                   "id": 115800958,
+                   "login": "Web3-Plurality",
+                   "gravatar_id": "",
+                   "url": "https://api.github.com/orgs/Web3-Plurality",
+                   "avatar_url": "https://avatars.githubusercontent.com/u/115800958?"
+                 }
+               }
+   19) Now we will send the response in the form of json response using 'res.json'. For this paste the below command in index.js file.
+        ######
+              app.get('/github', (req,res) => {
+                  res.send(githubData)
+              })
+  20) Again run the start command and go to /github page, see it is showing data now.
+</br>
+
+## Lec 3
+   1) 
