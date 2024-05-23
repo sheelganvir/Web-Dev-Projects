@@ -99,5 +99,57 @@
   20) Again run the start command and go to /github page, see it is showing data now.
 </br>
 
-## Lec 3
-   1) 
+## Lec 3: How to connect frontend and backend in javascript | Fullstack Proxy and CORS
+   1) Create backend and frontend folders in the root.
+   2) Now follow the steps from Lec2 upto step-5 inside backend folder. 
+   3) Now let's try the modern syntax to bring express paste the below command in index.js
+      ######
+            import express from 'express'
+   4) Create app using express
+      ######
+            const app = express();
+   5) Now serve use the below code in index.js
+      ######
+            app.get('/',(req, res) => {
+               res.send('Server is ready');
+            });
+   6) Assign port. If we have environment variable(.env file) then we can use the below code in index.js
+      ######
+            const port = process.env.PORT
+      Suppose there may or may not be .env file then we can take it using hard coded port. Use the below code
+      ######
+            const port = process.env.PORT || 3000;
+   7) Copy paste the below code in index.js
+      ######
+            app.listen(port, () => {
+                console.log(`Serve at http://localhost:${port}`)
+            })
+   8) Since we are using the new syntax of import express. We need to tell the type module.
+      Copy paste the below code in package.json file below the line "main": "index.js",
+      ######
+            "type": "module",
+      It tells that all the js files should be arranged as module not as common js
+   9) Run the application using npm run start.
+   10) Now make a route where all the values will be served. Suppose we serve 5 jokes.
+       Copy paste the below code
+       ######
+             app.get('/jokes', (req, res) => {
+                const jokes = [
+                    {
+                        id: 1,
+                        title: 'A joke',
+                        content: 'This is a joke'
+                    },
+                    {
+                        id: 2,
+                        title: 'Another joke',
+                        content: 'This is another joke'
+                    }
+                ]
+                res.send(jokes);
+            })
+   12) You can run the application again. Backend is done.
+   13) Open the frontend terminal. We have to create react app with vite. Run the below code in terminal
+       ######
+             npm create vite@latest .
+   14) Here . is used so that all the files will generate inside the same folder.
