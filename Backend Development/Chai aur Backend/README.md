@@ -101,7 +101,7 @@
 
 ## Lec 3: How to connect frontend and backend in javascript | Fullstack Proxy and CORS
    1) Create backend and frontend folders in the root.
-   2) Now follow the steps from Lec2 upto step-5.
+   2) Now follow the steps from Lec2 upto step-5 inside backend folder. 
    3) Now let's try the modern syntax to bring express paste the below command in index.js
       ######
             import express from 'express'
@@ -148,4 +148,8 @@
                 ]
                 res.send(jokes);
             })
-   12) 
+   12) You can run the application again. Backend is done.
+   13) Open the frontend terminal. We have to create react app with vite. Run the below code in terminal
+       ######
+             npm create vite@latest .
+   14) Here . is used so that all the files will generate inside the same folder.
