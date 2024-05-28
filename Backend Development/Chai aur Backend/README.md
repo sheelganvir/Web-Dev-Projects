@@ -98,8 +98,10 @@
               })
   20) Again run the start command and go to /github page, see it is showing data now.
 </br>
+*****************************************************************************************************************************************
 
 ## Lec 3: How to connect frontend and backend in javascript | Fullstack Proxy and CORS
+   ### Backend
    1) Create backend and frontend folders in the root.
    2) Now follow the steps from Lec2 upto step-5 inside backend folder. 
    3) Now let's try the modern syntax to bring express paste the below command in index.js
@@ -149,7 +151,67 @@
                 res.send(jokes);
             })
    12) You can run the application again. Backend is done.
+### Frontend 
    13) Open the frontend terminal. We have to create react app with vite. Run the below code in terminal
        ######
              npm create vite@latest .
    14) Here . is used so that all the files will generate inside the same folder.
+   15) Open the terminal inside frontend folder. And install npm packages using 'npm i'
+   16) Run the react app using
+       ######
+             npm run dev
+   17) Go to app.jsx inside src folder. Delete lines 11-30. Give paste this inside the tags
+       ######
+             <h1>Chai aur Full Stack</h1>
+   18) Delete line no. 7 of app.jsx file.
+   19) Create a empty array of jokes stored in a const, copy paste the below code
+       ######
+            const [jokes, setJokes] = useState([])
+   20) Now paste the below code in line no. 12
+       ######
+             <p>JOKES: {jokes.length}</p>
+       ###### Paste the below code after the above code
+             {
+              jokes.map((joke, index) => {
+                <div key={joke.id}>
+                  <h3>{joke.title}</h3>
+                  <p>{joke.content}</p>
+                </div>
+              })
+            }
+   22) Now for doing web request we install axios package. Axios js is a promise-based HTTP library that lets you consume an API service. It offers different ways of making HTTP requests such as GET, POST, PUT, and DELETE. Axios can be used in any JavaScript framework, and once installed, it enables your application to interact with an API service. Stop the running application through 'Ctrl+C' and run the below command in terminal
+       ######
+             npm i axios
+   23) Now import axios. Paste it in line no.5 of app.jsx file
+       ######
+             import axios from 'axios'
+   24) Paste the usestate function above return
+       ######
+             useEffect(() => {
+                axios.get('http://localhost:3000/api/jokes')
+                .then((response) => {
+                  setJokes(response.data)
+                })
+                .catch((error) => {
+                  console.log(error)
+                })
+              })
+   25) Backend running on port = 3000
+       Frontend running on port = 5173
+   26) Go to the index.js file of backend folder and update '/api' in app.get jokes
+       ######
+             app.get('/api/jokes', (req, res) => {
+   27) Now run backend and frontend in two different terminals.
+   28) Now inside app.jsx of frontend inside useEffect remove http://localhost:3000. So it will become only
+       ######
+             useEffect(() => {
+             axios.get('/api/jokes')
+             .then((response) => {
+               setJokes(response.data)
+             })
+             .catch((error) => {
+               console.log(error)
+             })
+           })
+   29) Now it will show error and there comes concept of proxy.
+
