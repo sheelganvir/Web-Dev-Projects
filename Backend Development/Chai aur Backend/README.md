@@ -172,12 +172,12 @@
              <p>JOKES: {jokes.length}</p>
        ###### Paste the below code after the above code
              {
-              jokes.map((joke, index) => {
+              jokes.map((joke, index) => (
                 <div key={joke.id}>
                   <h3>{joke.title}</h3>
                   <p>{joke.content}</p>
                 </div>
-              })
+              ))
             }
    22) Now for doing web request we install axios package. Axios js is a promise-based HTTP library that lets you consume an API service. It offers different ways of making HTTP requests such as GET, POST, PUT, and DELETE. Axios can be used in any JavaScript framework, and once installed, it enables your application to interact with an API service. Stop the running application through 'Ctrl+C' and run the below command in terminal
        ######
@@ -202,7 +202,7 @@
        ######
              app.get('/api/jokes', (req, res) => {
    27) Now run backend and frontend in two different terminals.
-   28) Now inside app.jsx of frontend inside useEffect remove http://localhost:3000. So it will become only
+   28) Now lets perform whitelisting, inside app.jsx of frontend inside useEffect remove http://localhost:3000. So it will become only
        ######
              useEffect(() => {
              axios.get('/api/jokes')
@@ -214,4 +214,22 @@
              })
            })
    29) Now it will show error and there comes concept of proxy.
+   30) Whenever we request on /api then we want that http://localhost:3000 automatically append before it this is called proxy. For this, go to vite.config.js inside frontend folder. So, vite.config.js  file will become
+       ######
+            import { defineConfig } from 'vite'
+            import react from '@vitejs/plugin-react'
+            
+            // https://vitejs.dev/config/
+            export default defineConfig({
+              server: {
+                proxy: {
+                  '/api': 'http://localhost:3000',
+                },
+              },
+              plugins: [react()],
+            })
+   31) It means that if the backend and frontend have two different origins (backend on port=3000 and frontend on port=5173)
+       Server will treat as both the backend and frontend have same origin i.e., both is running on port = 3000.
+   32) Now see backend and frontend is now connected.
+*************************************************************************************************************************
 
