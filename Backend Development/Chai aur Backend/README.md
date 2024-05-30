@@ -233,6 +233,7 @@
    32) Now see backend and frontend is now connected.
 </br>
 *************************************************************************************************************************
+
 ## Lec 4: Data modelling for backend with mongoose
 
    1) We will learn about data modelling with the help of mongoose.
@@ -248,12 +249,194 @@
    9) Inside models create a folder named as todos.
    10) Inside it create a file named as "user.models.js"
    11) Create another file inside todos named as "todo.models.js"
-   12) Create another file named as "sub_todo.models.js". Inside this file import mongoose using
+   12) Create another file named as "sub_todo.models.js". Inside user.models.js file import mongoose. Create a schema and store it inside a const. Now export const User 
        ######
              import mongoose from "mongoose"
-   13) Create a schema and store it inside a const
+
+             const userSchema = new mongoose.Schema({})
+            
+             export const User = mongoose.model('User', userSchema);
+       Here, if "User" store in mongoDB databse it will store in lowercase+s here 's' is suffix for plural.
+   13) Now define schema by creating fields inside schema in the form of objects i.e., update schema of line 2 by the below code
        ######
-             
+             const userSchema = new mongoose.Schema(
+                {
+                    username: {
+                        type: String,
+                        required: true,
+                        unique: true,
+                        lowercase: true
+                    },
+                    email: {
+                        type: String,
+                        required: true,
+                        unique: true,
+                        lowercase: true
+                    },
+                    password: {
+                        type: String,
+                        required: [true, "Password is required"]
+                    }
+                }
+             )
+   14) We can give the timestamps which defines when the above schema is created and updated. We add it as the last object inside schema.
+       ######
+             const userSchema = new mongoose.Schema(
+                {
+                    username: {
+                        type: String,
+                        required: true,
+                        unique: true,
+                        lowercase: true
+                    },
+                    email: {
+                        type: String,
+                        required: true,
+                        unique: true,
+                        lowercase: true
+                    },
+                    password: {
+                        type: String,
+                        required: [true, "Password is required"]
+                    }
+                }, {timestamps: true}
+            )
+   15) We have done user schema (i.e., for register and login form)
+   16) Now Create schema for todos. Go to todo.models.js file.
+   17) Inside this file make todo schema and add timestamps
+       ######
+             import mongoose from "mongoose"
+
+            const todoSchema = new mongoose.Schema(
+                {
+                    
+                }, {timestamps: true}
+            )
+            
+            export const Todo = mongoose.model('Todo', todoSchema);
+   18) Now go inside sub_todo.models.js file and create schema for it
+       ######
+             import mongoose from "mongoose"
+
+            const subTodoSchema = new mongoose.Schema({}, {timestamps: true})
+            
+            export const SubTodo = mongoose.model('SubTodo', subTodoSchema);
+   19) Now inside todo.models.js create schema fields.
+       ######
+             const todoSchema = new mongoose.Schema(
+                {
+                    content:{
+                        type: String,
+                        required: true
+                    },
+                    complete: {
+                        type: Boolean,
+                        default: false
+                    },
+                    createdBy: {
+                        
+                    }
+                }, {timestamps: true}
+            )
+       Inside created by we have to ake user data for this we have to set a relationship between user.models.js and todo.models.js files. For this take two things into consideration:
+       First is the type, second is the reference. Now replace the createdBy object by the below code
+       ######
+             createdBy: {
+                  type: mongoose.Schema.Types.ObjectId,
+                  ref: "User"
+             }
+       Here, type is specially define for reference. And reference is taken by the model "User" of user.models.js file
+   20) Now create another field called "subTodos" below the "createdBy" field. subTodos field is array of objects. for the first object do type, ref as similar to "createdBy" field.
+       ######
+             subTodos: [
+                  {
+                      type: mongoose.Schema.Types.ObjectId,
+                      ref: "SubTodo" 
+                  },
+              ], // Array of Sub-Todos
+       Here, reference is taken by the model "SubTodo" of sub_todo.models.js file
+   21) Do the similar with sub_todo.models.js file. sub_todo.models.js file will become
+       ######
+             import mongoose from "mongoose"
+
+               const subTodoSchema = new mongoose.Schema({
+                   content:{
+                       type: String,
+                       required: true
+                   },
+                   complete: {
+                       type: Boolean,
+                       default: false
+                   },
+                   createdBy: {
+                       type: mongoose.Schema.Types.ObjectId,
+                       ref: "User"
+                   },
+               }, {timestamps: true})
+               
+               export const SubTodo = mongoose.model('SubTodo', subTodoSchema);
+   22) todo.models.js file will become
+       ######
+             import mongoose from "mongoose"
+
+               const todoSchema = new mongoose.Schema(
+                   {
+                       content:{
+                           type: String,
+                           required: true
+                       },
+                       complete: {
+                           type: Boolean,
+                           default: false
+                       },
+                       createdBy: {
+                           type: mongoose.Schema.Types.ObjectId,
+                           ref: "User"
+                       },
+                       subTodos: [
+                           {
+                               type: mongoose.Schema.Types.ObjectId,
+                               ref: "SubTodo" 
+                           },
+                       ], // Array of Sub-Todos
+                   }, {timestamps: true}   
+               )
+               
+               export const Todo = mongoose.model('Todo', todoSchema);
+   23) user.models.js file will become
+       ######
+             import mongoose from "mongoose"
+
+            const userSchema = new mongoose.Schema(
+                {
+                    username: {
+                        type: String,
+                        required: true,
+                        unique: true,
+                        lowercase: true
+                    },
+                    email: {
+                        type: String,
+                        required: true,
+                        unique: true,
+                        lowercase: true
+                    },
+                    password: {
+                        type: String,
+                        required: [true, "Password is required"]
+                    }
+                }, {timestamps: true}
+            )
+            
+            export const User = mongoose.model('User', userSchema);
+
+
+
+               
+
+
+
+
 
    
 
