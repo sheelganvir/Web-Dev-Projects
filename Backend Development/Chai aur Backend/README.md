@@ -231,5 +231,30 @@
    31) It means that if the backend and frontend have two different origins (backend on port=3000 and frontend on port=5173)
        Server will treat as both the backend and frontend have same origin i.e., both is running on port = 3000.
    32) Now see backend and frontend is now connected.
+</br>
 *************************************************************************************************************************
+## Lec 4: Data modelling for backend with mongoose
+
+   1) We will learn about data modelling with the help of mongoose.
+   2) First go to eraser.io to create diagram and create a file, first create a registration form and then login form then To dos.
+   3) Login form validate the data.
+   4) ![image](https://github.com/sheelganvir/Web-Dev-Projects/assets/128175450/fce6b38d-32a9-494f-87de-e9b77214af81)
+   5) Go to https://stackblitz.com/ or https://github.com/codespaces/templates . They creates an environment without any installation of packages.
+   6) Create a new project of express.
+   7) Now open a new terminal and install mongoose
+      ######
+            npm i mongoose
+   8) Now create a folder called models in it.
+   9) Inside models create a folder named as todos.
+   10) Inside it create a file named as "user.models.js"
+   11) Create another file inside todos named as "todo.models.js"
+   12) Create another file named as "sub_todo.models.js". Inside this file import mongoose using
+       ######
+             import mongoose from "mongoose"
+   13) Create a schema and store it inside a const
+       ######
+             
+
+   
+
 
