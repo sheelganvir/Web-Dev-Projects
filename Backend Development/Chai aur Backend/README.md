@@ -429,11 +429,139 @@
             )
             
             export const User = mongoose.model('User', userSchema);
+</br>
+****************************************************************************************************************************
 
+## Lec 5 : Ecommerce and Hospital management Data modelling
 
+   1) Create a folder name "Eommerce" inside models folder
+   2) Create category.models.js, order.models.js, product.models.js, user.models.js files inside "Ecommerce" folder.
+   3) Inside user.models.js file paste the we will create Schema as per our input type.
+   4) Paste the below code inside user.models.js file
+      ######
+            import mongoose from "mongoose"
 
-               
+            const userSchema = new mongoose.Schema({
+                username: {
+                    type: String,
+                    required: true,
+                    unique: true,
+                    lowercase: true
+                },
+                email: {
+                    type: String,
+                    required: true,
+                    unique: true,
+                    lowercase: true
+                },
+                password: {
+                    type: String,
+                    required: true,
+                },
+            }, {timestamps: true});
+            
+            export const User = mongoose.model("User", userSchema)
+   5) Inside category.models.js paste the below code
+      ######
+            import mongoose from 'mongoose';
 
+            const categorySchema = new mongoose.Schema(
+                {
+                    name: {
+                        type: String,
+                        required: true,
+                    },
+                },
+                { timestamps: true }
+            );
+            
+            export const Category = mongoose.model('Category', categorySchema);
+   6) Inside order.models.js paste the below code
+      ######
+            import mongoose from "mongoose";
+
+            const orderItemSchema = new mongoose.Schema({
+                productId: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "Product"
+                },
+                quantity: {
+                    type: Number,
+                    required: true
+                }
+            })
+            
+            const orderSchema = new mongoose.Schema(
+                {
+                    orderPrice: {
+                        type: Number,
+                        required: true
+                    },
+                    customer: {
+                        type: mongoose.Schema.Types.ObjectId,
+                        ref: "User"
+                    },
+                    orderItems: {
+                        type: [orderItemSchema]
+                    },
+                    address: {
+                        type: String,
+                        required: true
+                    },
+                    status: {
+                        type: String,
+                        enum: ["PENDING", "CANCELLED", "DELIVERED"], // enum is for choice, you can select any one of these
+                        default: "PENDING"
+                    }
+                },
+                {timestamps:true}
+            )
+            
+            export const Order = mongoose.model("Order", orderSchema)
+   7) Inside product.models.js paste the below code
+      ######
+            import mongoose from "mongoose";
+
+            const productSchema = new mongoose.Schema(
+                {
+                    description: {
+                        required: true,
+                        type: String
+                    },
+                    name: {
+                        required: true,
+                        type: String
+                    },
+                    productImage: {
+                        type: String
+                    },
+                    price: {
+                        type: Number,
+                        default: 0
+                    },
+                    stock: {
+                        type: Number,
+                        default: 0
+                    },
+                    category: {
+                        type: mongoose.Schema.Types.ObjectId,
+                        ref: "Category",
+                        required: true
+                    },
+                    owner: {
+                        category: {
+                            type: mongoose.Schema.Types.ObjectId,
+                            ref: "User",
+                        }
+                    }
+                },
+                {timestamps: true}
+            );
+            
+            export const Product = mongoose.model("Product", productSchema);
+   8) Ecommerce project is completed.
+   9) Now lets make Hospital project.
+   10) 
 
 
 
