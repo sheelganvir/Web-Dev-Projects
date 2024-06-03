@@ -561,11 +561,307 @@
             export const Product = mongoose.model("Product", productSchema);
    8) Ecommerce project is completed.
    9) Now lets make Hospital project.
-   10) 
+   10) Create a Hospital management folder.
+   11) Inside this folder create doctor.models.js, medical_record.models.js, patient.models.js, hospital.models.js files.
+   12) Inside medical_record.models.js paste this code
+       ######
+             import mongoose from "mongoose";
 
+            const medicalRecordSchema = new mongoose.Schema({}, {timestamps:true});
+            
+            export const MedicalRecord = mongoose.model(
+                'MedicalRecord',
+                medicalRecordSchema
+            );
+   14) Inside hospital.models.js paste this code
+       ######
+             import mongoose from "mongoose";
 
+            const hospitalSchema = new mongoose.Schema({
+                name: {
+                    type: String,
+                    required: true
+                },
+                addressLine1: {
+                    type: String,
+                    required: true
+                },
+                addressLine2: {
+                    type: String,
+                },
+                city: {
+                    type: String,
+                    required: true
+                },
+                pincode: {
+                    type: String,
+                    required: true
+                },
+                specializedIn: [{
+                    type: String,
+                },],
+                
+            }, {timestamps:true});
+            
+            export const Hospital = mongoose.model(
+                'Hospital',
+                hospitalSchema
+            );
+   16) Inside doctor.models.js paste this code
+       ######
+             import mongoose from "mongoose";
 
+            const doctorSchema = new mongoose.Schema({
+                name:{
+                    type: String,
+                    required: true
+                },
+                salary: {
+                    type: String,
+                    required: true
+                },
+                qualification: {
+                    type: String,
+                    required: true
+                },
+                experienceInYears: {
+                    type: Number,
+                    default: 0
+                },
+                worksInHospitals: [
+                    {
+                        type: mongoose.Schema.Types.ObjectId,
+                        ref: 'Hospital'
+                    },
+                ],
+            
+            }, {timestamps:true});
+            
+            export const Doctor = mongoose.model(
+                'Doctor',
+                doctorSchema
+            );
+   18) Inside patient.models.js paste this code
+       ######
+             import mongoose from "mongoose";
 
-   
+            const patientSchema = new mongoose.Schema({
+                name: {
+                    type: String,
+                    required: true
+                },
+                diagonsedWith: {
+                    type: String,
+                    required: true
+                },
+                address: {
+                    type: String,
+                    required: true
+                },
+                age: {
+                    type: Number,
+                    required: true
+                },
+                bloodGroup: {
+                    type: String,
+                    required: true
+                },
+                gender: {
+                    type: String,
+                    enum: ["Male", "Female", "Others"]
+                },
+                admittedIn: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'Hospital'
+                },
+            }, {timestamps:true});
+            
+            export const Patient = mongoose.model(
+                'Patient',
+                patientSchema
+            );
+       
+   19) We have created the hospital management app.
+</br>
+**************************************************************************************
+
+## Lec 6: How to setup a professional backend project
+
+   1) Create a MyYoutube-Clone repo and folder.
+   2) Inside it, create empty node application using command
+       ######
+          npm init
+   3) Create README.md file
+   4) Create a public folder. Inside this public folder create a temp folder.
+   5) Inside temp folder create a .gitkeep file, this file is used to push the empty folders in the github
+   6) Inside MyYoutube-Clone folder create a .gitignore file and paste the below code inside it
+      ######
+            # Logs
+            logs
+            *.log
+            npm-debug.log*
+            yarn-debug.log*
+            yarn-error.log*
+            lerna-debug.log*
+            .pnpm-debug.log*
+            
+            # Diagnostic reports (https://nodejs.org/api/report.html)
+            report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+            
+            # Runtime data
+            pids
+            *.pid
+            *.seed
+            *.pid.lock
+            
+            # Directory for instrumented libs generated by jscoverage/JSCover
+            lib-cov
+            
+            # Coverage directory used by tools like istanbul
+            coverage
+            *.lcov
+            
+            # nyc test coverage
+            .nyc_output
+            
+            # Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
+            .grunt
+            
+            # Bower dependency directory (https://bower.io/)
+            bower_components
+            
+            # node-waf configuration
+            .lock-wscript
+            
+            # Compiled binary addons (https://nodejs.org/api/addons.html)
+            build/Release
+            
+            # Dependency directories
+            node_modules/
+            jspm_packages/
+            
+            # Snowpack dependency directory (https://snowpack.dev/)
+            web_modules/
+            
+            # TypeScript cache
+            *.tsbuildinfo
+            
+            # Optional npm cache directory
+            .npm
+            
+            # Optional eslint cache
+            .eslintcache
+            
+            # Microbundle cache
+            .rpt2_cache/
+            .rts2_cache_cjs/
+            .rts2_cache_es/
+            .rts2_cache_umd/
+            
+            # Optional REPL history
+            .node_repl_history
+            
+            # Output of 'npm pack'
+            *.tgz
+            
+            # Yarn Integrity file
+            .yarn-integrity
+            
+            # dotenv environment variables file
+            .env
+            .env.test
+            .env.production
+            
+            # parcel-bundler cache (https://parceljs.org/)
+            .cache
+            .parcel-cache
+            
+            # Next.js build output
+            .next
+            out
+            
+            # Nuxt.js build / generate output
+            .nuxt
+            dist
+            
+            # Gatsby files
+            .cache/
+            # Comment in the public line in if your project uses Gatsby and not Next.js
+            # https://nextjs.org/blog/next-9-1#public-directory-support
+            # public
+            
+            # vuepress build output
+            .vuepress/dist
+            
+            # Serverless directories
+            .serverless/
+            
+            # FuseBox cache
+            .fusebox/
+            
+            # DynamoDB Local files
+            .dynamodb/
+            
+            # TernJS port file
+            .tern-port
+            
+            # Stores VSCode versions used for testing VSCode extensions
+            .vscode-test
+            
+            # yarn v2
+            .yarn/cache
+            .yarn/unplugged
+            .yarn/build-state.yml
+            .yarn/install-state.gz
+            .pnp.*
+            
+            # End of https://mrkandreev.name/snippets/gitignore-generator/#Node
+   7) Create .env file.
+   8) Create .env.sample file
+   9) Create a src folder
+   10) Inside src folder create app.js, constants.js, index.js files
+   11) We will use modern import syntax to import js files, for that go to package.json add a line below description
+       ######
+             "type": "module",
+
+   12) Now install Nodemon which restarts the server each time when the files save (it usually install dev dependencies)
+       ######
+             npm i -D nodemon
+   13) Dev dependencies are the dependencies are used during development are not carried in production.
+   14) Nodemon will help us to reload the index.js file inside src. For that go to package.json inside "scripts" remove the test command and add
+       ######
+             "dev": "nodemon src/index.js"
+   15) Inside src folder create the below folders
+       - controllers : For functionality
+       - db : For database connection
+       - middlewares : Codes which are run in between
+       - models : to create various models files
+       - routes : like index.js
+       - utils : utility such as file uploads, mails, tokens, functionality which repeats are stored here
+   16) install Prettier for teamwork communication, it is also a dev dependency
+       ######
+             npm i -D prettier
+   17) Inside MYYoutube-clone or in the root, create a .prettierrc file and add below code inside it
+       ######
+             {
+                "singleQuote": false,
+                "bracketSpacing": true,
+                "tabWidth": 2,
+                "trailingComma": "es5",
+                "semi": true
+            }
+   18) Create a .prettierignore file inside root to restrict prettier inside certain files. Add below code inside it
+       ######
+             /.vscode
+             /node_modules
+             ./dist
+
+             *.env
+             .env
+             .env.*
+   19) Done for this lec.
+</br>
+
+*******************************************************************************
 
 
