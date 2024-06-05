@@ -918,6 +918,39 @@
                })
 
        We can write this code directly here or second approach is we can write these all inside db folder export functions in it and import functions here in the index.js file this is the most optimal approach.
-   14)
-       
+   14) Comment all the above code except first 2 lines. 
+   15) Go to db folder and create an index.js file Paste below code  inside it.
+       ######
+            import mongoose from "mongoose";
+            import { DB_NAME } from "../constants.js";
+            
+            const connectDB = async () => {
+                try {
+                    const connectionInstance = await mongoose.connect(`${process.env.MONGODB_URI}/${DB_NAME}`)
+                    console.log(`\n MongoDB connected !! DB HOST : ${connectionInstance.connection.host}`);
+                } catch (error) {
+                    console.log("MONGODB CONNECTION ERROR ", error);
+                    process.exit(1);
+                }
+            }
+            
+            export default connectDB
+   16) Go to index.js file of the root and import connectDB here, and import the dotenv and config the path, so this index.js file will become
+       ######
+            import dotenv from "dotenv"
+            import connectDB from "./db/index.js";
+            
+            dotenv.config({
+                path: './env'
+            })
+            
+            connectDB()
+   17) This type of import of dotenv is experimental setup for this to run go to package.json file
+       Under scripts tag update the dev tag to
+       ######
+             "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
+   18) Done for this lec
+</br>
+
+************************************************************************************
 
