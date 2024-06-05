@@ -864,4 +864,60 @@
 
 *******************************************************************************
 
+## Lec 7: How to connect database in MERN with debugging
+
+   1) Database used : MongoDB
+   2) Go to https://www.mongodb.com/products/platform/atlas-database
+   3) After sign in click on 'PROJECTS'-> 'New Project'. Add project name then click on 'next', then 'create project'.
+   4) Create cluster: Click on 'Create'-> Free -> aws -> Mumbai ->  Name(any) -> Click on 'Create Deployment'
+   5) Now you can edit the username and password generated and click on 'Create Database User'
+   6) Go to 'Network Access' -> 'Add IP Address' -> 'Allow Access from Anywhere' -> 'confirm'
+   7) Go to 'Database Access' -> If there is already a database user, change its 'MongoDB roles' or 'Built in roles' to 'read and write to any database'
+   8) Then go to "Database" -> Connect -> Compass -> Copy the connection string
+   9) Open .env file of the project, SET PORT and MONGODB_URI
+       ######
+            PORT=8000
+            MONGODB_URI=
+      Now paste the copied connection string here in the second line, it will become
+      ######
+            PORT=8000
+            MONGODB_URI=mongodb+srv://sheel:<password>@cluster0.yyxublz.mongodb.net/
+      Update your password in it and remove the ending '/'
+   10) Lets change the name of database. Go to constants.js file inside src folder and paste
+       ######
+             export const DB_NAME = "sheelg"
+   11) Required packages: dotenv, mongoose, express
+   12) Open terminal and install the above packages by using the below command
+       ######
+             npm i mongoose express dotenv
+       You can check if packages are installed or not by 'package.json' -> Dependencies
+   13) Go to index.js file and import mongoose, and connect database with a async wait and always use try and catch and await.
+       Also import Database name. Also import express and store in a const. Now add app listener which listen to the error event. Also add app.listen which we had learned in very starting.
+       ######
+               import mongoose from "mongoose";
+               import { DB_NAME } from "./constants";
+               
+               import express from "express";
+               const app = express()
+               
+               ( async () => {
+                   try {
+                       await mongoose.connect(`${process.env.MONGODB_URI}/${DB_NAME}`)
+                       app.on("error", (error) => {
+                           console.log("ERRR: ", error);
+                           throw error
+                       })
+               
+                       app.listen(process.env.PORT, () => {
+                           console.log(`App is listening on port ${process.env.PORT}`);
+                       })
+                   } catch (error) {
+                       console.error("ERROR: ", error);
+                       throw err
+                   }
+               })
+
+       We can write this code directly here or second approach is we can write these all inside db folder export functions in it and import functions here in the index.js file this is the most optimal approach.
+   14)
+       
 
