@@ -1040,7 +1040,45 @@
             */
             
             export {asyncHandler}
-   9) Now we want to standarize API error and API response
-            
-      
+   9) Now we want to standardize API error and API response. Create a file named "ApiError.js" inside utils folder.
+       ###### ApiError.js file
+             class ApiError extends Error {
+                   constructor(
+                       statusCode,
+                       message= "Something went wrong",
+                       errors = [],
+                       statck = ""
+                   ){
+                       super(message)
+                       this.statusCode = statusCode
+                       this.data = null
+                       this.message = message
+                       this.success = false;
+                       this.errors = errors
+               
+                       if (statck) {
+                           this.stack = statck
+                       } else {
+                           Error.captureStackTrace(this, this.constructor)
+                       }
+                   }
+               }
+               
+               export { ApiError }
+   10) Create a "ApiResponse.js" file inside utils folder
+       ###### ApiResponse.js file
+             class ApiResponse{
+                   constructor(statusCode, data, message = "Success"){
+                       this.statusCode = statusCode
+                       this.data = data
+                       this.message = message
+                       this.success = statusCode < 400
+                   }
+               }
+   11) Done for this lec
+</br>
+
+**********************************************************************************
+
+
        
