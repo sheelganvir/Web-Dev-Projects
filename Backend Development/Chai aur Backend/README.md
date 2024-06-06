@@ -954,3 +954,93 @@
 
 ************************************************************************************
 
+## Lec 8 : Custom API response and Error Handling
+
+   1) Go to app.js and import express
+      ######
+            import express from "express";
+            const app = express()
+            export {app} // it is same as 'export default app'
+   2) Go to index.js of src folder. Now understand that if there database is connected then it will return some promises thats why we use '.then', '.catch'.
+      If database is connected then to start the server we need app.listen command. So this index.js file will become
+      ######
+            import dotenv from "dotenv"
+            import connectDB from "./db/index.js";
+            
+            dotenv.config({
+                path: './env'
+            })
+            
+            connectDB()
+            .then(() => {
+                app.listen(process.env.PORT || 8000, () => {
+                    console.log(` Server is running at port : ${process.env.PORT}`);
+                })
+            })
+            
+            .catch((err) => {
+                console.log("MONGODB connection failed !! ", err);
+            })
+   3) Go to https://www.npmjs.com/ and search two packages 'cookie-parser' and 'cors'
+   4) cors : it helps in cross origin resource sharing
+   5) Install using command
+      ######
+            npm i cookie-parser cors
+   6) Go to app.js and import cors and cookie-parser. Now config cors using app.use, it tells about the server of frontend from which request will be generated.
+      This can be achieved by allowing the origin. Also allow the credentials. 
+      Now understand that data can be received in any format (like url, json, form, etc) under certain limit.
+      Also we make a static config it is just like a public folder where all types of files can be stored publically. That's why we have created a public folder in the root.
+      Cookie-parser is used to access and set the cookies of user's browser
+      ###### app.js file
+            import express from "express";
+            import cors from "cors"
+            import cookieParser from "cookie-parser";
+            
+            const app = express()
+            
+            app.use(cors({
+                origin: process.env.CORS_ORIGIN,
+                credentials: true
+            }))
+            
+            app.use(express.json({limit: "16kb"}))
+            app.use(express.urlencoded({extended: true, limit: "16kb"}))
+            app.use(express.static("public"))
+            app.use(cookieParser())
+            
+            export {app} // it is same as 'export default app'
+      ###### .env file
+            PORT=8000
+            CORS_ORIGIN=*
+      Here, mongodb url is not shown but it is there in the file of the system. Here '*' is allowing request from any server
+   7) What is middlewares? Middle ware is used as a check(such as check if user is loggedin) between the responses/requests.
+      ![image](https://github.com/sheelganvir/Web-Dev-Projects/assets/128175450/e634d15d-9ff7-4da0-b9fc-0f8f6b0b38ae)
+   8) Whenever we talk with database, async wait will always arise and we have to use 'try' and catch (or we use .then .catch for promises) each time.
+      It means we will use the same function multiple times so we just wrap the function inside utils folder. For that create 'asyncHandler.js' file inside 'utils' folder
+      asyncHandler creates a method and will export it.
+      ###### asyncHandler.js file
+            const asyncHandler = (requestHandler) => {
+                (req, res, next) => {
+                    Promise.resolve(requestHandler(req, res, next)).catch((err) => next(err))
+                }
+            }
+            
+            /* Above function can be written by the below format
+            
+            const asyncHandler = (fn) => async (req, res, next) => {
+                try {
+                    await fn(req, res, next)
+                } catch (error) {
+                    res.status(err.code || 500).json({
+                        success: false,
+                        message: err.message
+                    })
+                }
+            }
+            */
+            
+            export {asyncHandler}
+   9) Now we want to standarize API error and API response
+            
+      
+       
