@@ -1080,5 +1080,223 @@
 
 **********************************************************************************
 
+## Lec 9 : User and video model with hooks and JWT
 
-       
+   1) Create files "user.model.js" and "video.model.js" inside "models" folder inside "src" folder
+   2) Code snippet for defining a Mongoose schema for a user
+      ###### user.model.js file
+            import mongoose, {Schema} from "mongoose";
+
+            const userSchema = new Schema({
+                username: {
+                    type: String,
+                    required: true,
+                    unique: true,
+                    lowercase: true,
+                    trim: true,
+                    index: true     // it optimizes searching in database
+                },
+                email: {
+                    type: String,
+                    required: true,
+                    unique: true,
+                    lowercase: true,
+                    trim: true,
+                },
+                fullname: {
+                    type: String,
+                    required: true,
+                    trim: true,
+                    index: true
+                },
+                avatar: {
+                    type: String,   //cloudinary url
+                    required: true,
+                },
+                coverImage: {
+                    type: String,   //cloudinary url
+                }, 
+                watchHistory: [
+                    {
+                        type: Schema.Types.ObjectId,
+                        ref: "Video"
+                    }
+                ],
+                password: {
+                    type: String,
+                    required: [true, 'Password is required']
+                },
+                refreshToken: {
+                    type: String
+                }
+            },{timestamps:true})
+            
+            export const User = mongoose.model("User", userSchema)
+   
+   3) Go to https://www.npmjs.com/ and search "mongoose-aggregate-paginate-v2" this package allow us to write aggregation queries. Install this package using command
+      ######
+            npm install mongoose-aggregate-paginate-v2
+      Now import "mongoose-aggregate-paginate" in video.model.js file
+      Code snippet for defining a Mongoose schema for a video model
+      ###### video.model.js file
+            import mongoose, {Schema} from "mongoose";
+            import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
+            
+            const videoSchema = new Schema(
+                {
+                    videoFile: {
+                        type: String,   //cloudinary url
+                        required: true
+                    }, 
+                    thumbnail: {
+                        type: String,   //cloudinary url
+                        required: true
+                    },
+                    title: {
+                        type: String,   
+                        required: true
+                    },
+                    description: {
+                        type: String,   
+                        required: true
+                    },
+                    duration: {
+                        type: Number,   
+                        required: true
+                    },
+                    views: {
+                        type: Number,   
+                        default: 0
+                    },
+                    isPublished: {
+                        type: Boolean,
+                        default: true
+                    },
+                    owner: {
+                        type: Schema.Types.ObjectId,
+                        ref: "User"
+                    }
+            
+                },
+                {timestamps:true}
+            )
+            
+            videoSchema.plugin(mongooseAggregatePaginate)
+            
+            export const Video = mongoose.model("Video", videoSchema)
+            
+   6) Go to https://www.npmjs.com/ and search "jsonwebtoken". Go to https://www.npmjs.com/ and search "bcrypt" (A library to help you hash passwords or it encrypt the password)
+      - Install these packages using command
+         ######
+               $ npm i bcrypt jsonwebtoken
+      - Inside "user.model.js" file import "jwt" and "bcrypt"
+      - For encryption we need to take help of some hooks of mongoose. Go to https://mongoosejs.com/docs/middleware.html.
+      - Click on "Pre" (It make changes just before saving the data i.e., it encrypts the password). We will directly use it as a middleware in user.model.js file
+      - Now use methods to check the entered password is correct or not.
+      - jwt is a bearer token (It acts like a key, if someone has this key, it will return the data to them)
+      - ACCESS tokens will not store in database while the REFRESH token will store in database.
+      - Add this below code in .env file
+        ######
+               ACCESS_TOKEN_SECRET=sheel-ganvir-code
+               ACCESS_TOKEN_EXPIRY=1d
+               REFRESH_TOKEN_SECRET=sheel-ganvir-backend
+               REFRESH_TOKEN_EXPIRY=10d
+      - Update user.model.js code
+        ###### user.model.js code file
+               import mongoose, {Schema} from "mongoose";
+               import jwt from "jsonwebtoken";
+               import bcrypt from "bcrypt"
+               
+               const userSchema = new Schema({
+                   username: {
+                       type: String,
+                       required: true,
+                       unique: true,
+                       lowercase: true,
+                       trim: true,
+                       index: true     // it optimizes searching in database
+                   },
+                   email: {
+                       type: String,
+                       required: true,
+                       unique: true,
+                       lowercase: true,
+                       trim: true,
+                   },
+                   fullName: {
+                       type: String,
+                       required: true,
+                       trim: true,
+                       index: true
+                   },
+                   avatar: {
+                       type: String,   //cloudinary url
+                       required: true,
+                   },
+                   coverImage: {
+                       type: String,   //cloudinary url
+                   }, 
+                   watchHistory: [
+                       {
+                           type: Schema.Types.ObjectId,
+                           ref: "Video"
+                       }
+                   ],
+                   password: {
+                       type: String,
+                       required: [true, 'Password is required']
+                   },
+                   refreshToken: {
+                       type: String
+                   }
+               },{timestamps:true})
+               
+               userSchema.pre("save", async function (next) {
+                   if(!this.isModified("password")) return next();
+               
+                   this.password = bcrypt.hash(this.password, 10)
+                   next()
+               })
+               
+               userSchema.methods.isPasswordCorrect = async function(password){
+                   return await bcrypt.compare(password, this.password)
+               }
+               
+               userSchema.methods.generateAccessToken = function(){
+                   return jwt.sign(
+                       {
+                           _id: this._id,
+                           email: this.email,
+                           username: this.username,
+                           fullName: this.fullName
+                       },
+                       process.env.ACCESS_TOKEN_SECRET,
+                       {
+                           expiresIn: process.env.ACCESS_TOKEN_EXPIRY
+                       }
+                   )
+               }
+               
+               userSchema.methods.generateRefreshToken = function(){
+                   return jwt.sign(
+                       {
+                           _id: this._id,
+                       },
+                       process.env.REFRESH_TOKEN_SECRET,
+                       {
+                           expiresIn: process.env.REFRESH_TOKEN_EXPIRY
+                       }
+                   )
+               }
+               
+               export const User = mongoose.model("User", userSchema)
+   7) Done for this lec
+</br>
+
+**********************************************************************************************
+
+## Lec 10 : 
+
+   1)
+
+
