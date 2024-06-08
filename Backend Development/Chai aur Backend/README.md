@@ -1047,7 +1047,7 @@
                        statusCode,
                        message= "Something went wrong",
                        errors = [],
-                       statck = ""
+                       stack = ""
                    ){
                        super(message)
                        this.statusCode = statusCode
@@ -1056,8 +1056,8 @@
                        this.success = false;
                        this.errors = errors
                
-                       if (statck) {
-                           this.stack = statck
+                       if (stack) {
+                           this.stack = stack
                        } else {
                            Error.captureStackTrace(this, this.constructor)
                        }
@@ -1295,8 +1295,129 @@
 
 **********************************************************************************************
 
-## Lec 10 : 
+## Lec 10 : How to upload file in the backend
 
-   1)
+   1) Go to https://console.cloudinary.com/pm/c-351f0fa8453aa267bc26a3edd34eb8/getting-started
+   2) Install cloudinary using command
+      ######
+            npm install cloudinary
+   3) Go to https://www.npmjs.com/package/multer and intall multer using command
+      ######
+            npm i multer
+      Multer: Multer is a node.js middleware for handling multipart/form-data, which is primarily used for uploading files
+   4) Go to utils folder and create a new "cloudinary.js" file inside it
+   5) Inside "cloudinary.js" file import v2, import fs from "fs" (fs works like read, write, open the file).
+      - Go to https://console.cloudinary.com/pm/c-351f0fa8453aa267bc26a3edd34eb8/getting-started and copy cloudinary config
+        ######
+              cloudinary.config({ 
+                 cloud_name: 'dzzzitz1c', 
+                 api_key: '721218623789735', 
+                 api_secret: '-ZLhoNBGb1BsZzIqnscD-DroOOA' 
+               });
+      - Now we get the cloudinary credentials. Now open .env file and paste the below code
+        ######
+              CLOUDINARY_CLOUD_NAME=dzzzitz1c
+              CLOUDINARY_API_KEY=721218623789735
+              CLOUDINARY_API_SECRET=-ZLhoNBGb1BsZzIqnscD-DroOOA
+      - Inside "cloudinary.js" file paste the below code
+        ######
+              cloudinary.config({ 
+                   cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+                   api_key: process.env.CLOUDINARY_API_KEY, 
+                   api_secret: process.env.CLOUDINARY_API_SECRET 
+               });
+        This will give file uploading permission
+      - Go to https://console.cloudinary.com/pm/c-351f0fa8453aa267bc26a3edd34eb8/getting-started and copy the code for your preferred SDK
+        ######
+              cloudinary.uploader.upload("https://upload.wikimedia.org/wikipedia/commons/a/ae/Olympic_flag.jpg",
+                 { public_id: "olympic_flag" }, 
+                 function(error, result) {console.log(result); });
+      - Add the below code inside "Cloudinary.js" file
+        ######
+              const uploadOnCloudinary = async (localFilePath) => {
+                   try{
+                       if(!localFilePath) return null
+                       //upload the file on cloudinary
+                       const response = await cloudinary.uploader.upload
+                       (localFilePath, {
+                           resource_type: "auto"
+                       })
+                       //file has been uploaded successfully 
+                       console.log("File is uploaded on Cloudinary: ", response.url);
+                       return response;
+               
+                   } catch(error){
+                       fs.unlinkSync(localFilePath)    //remove the local saved temporary file as the upload operation got failed
+                       return null;
+                   }
+               }
+   6) Go to "middlewares" folder and create a "multer.middleware.js" file and import multer inside it 
+      - Go to https://github.com/expressjs/multer and copy Diskstorage
+        ######
+              const storage = multer.diskStorage({
+                 destination: function (req, file, cb) {
+                   cb(null, '/tmp/my-uploads')
+                 },
+                 filename: function (req, file, cb) {
+                   const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+                   cb(null, file.fieldname + '-' + uniqueSuffix)
+                 }
+               })
+               
+               const upload = multer({ storage: storage })
+   7) "multer.middleware.js" file will become
+      ######
+            import multer from "multer";
 
+            const storage = multer.diskStorage({
+                destination: function (req, file, cb) {
+                  cb(null, '/public/temp')
+                },
+                filename: function (req, file, cb) {
+                  const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+                  cb(null, file.originalname)
+                }
+              })
+              
+            export const upload = multer({ 
+                storage,
+            })
+      This code explains that whenever a file is uploaded in the server it will temporary store in the "temp" folder inside "public" folder with the original file name before uploading it to cloudinary
+   8) "cloudinary.js" file will become
+      ######
+            import { v2 as cloudinary } from "cloudinary";
+            import fs from "fs"
+            
+            cloudinary.config({ 
+                cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+                api_key: process.env.CLOUDINARY_API_KEY, 
+                api_secret: process.env.CLOUDINARY_API_SECRET 
+            });
+            
+            const uploadOnCloudinary = async (localFilePath) => {
+                try{
+                    if(!localFilePath) return null
+                    //upload the file on cloudinary
+                    const response = await cloudinary.uploader.upload
+                    (localFilePath, {
+                        resource_type: "auto"
+                    })
+                    //file has been uploaded successfully 
+                    console.log("File is uploaded on Cloudinary: ", response.url);
+                    return response;
+            
+                } catch(error){
+                    fs.unlinkSync(localFilePath)    //remove the local saved temporary file as the upload operation got failed
+                    return null;
+                }
+            }
+            
+            export {uploadOnCloudinary}
+   9) Done for this lec
+</br>
 
+**************************************************************************************
+
+## Lec 11: 
+
+   1) 
