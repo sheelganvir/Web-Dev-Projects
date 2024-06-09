@@ -1418,6 +1418,76 @@
 
 **************************************************************************************
 
-## Lec 11: 
+## Lec 11: HTTP crash course
 
-   1) 
+![image](https://github.com/sheelganvir/Web-Dev-Projects/assets/128175450/9d100eb6-4753-4599-8d41-f1f2fc693741)
+![image](https://github.com/sheelganvir/Web-Dev-Projects/assets/128175450/7a2e79de-002e-4fba-8fc8-60b39e5757a5)
+![image](https://github.com/sheelganvir/Web-Dev-Projects/assets/128175450/535bbecb-5b2c-4949-93e4-da03f75ba130)
+![image](https://github.com/sheelganvir/Web-Dev-Projects/assets/128175450/09e64566-c603-44a3-8b37-58b1182eb316)
+
+</br>
+
+**************************************************************************************
+
+## Lec 12: Complete guide for router and controller with debugging
+
+   1) Make a "user.controller.js" file inside "controllers" folder
+      ###### user.controller.js file
+            import { asyncHandler } from "../utils/asyncHandler.js";
+
+            const registerUser = asyncHandler(async(req, res) => {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            });
+
+            export {registerUser}
+   2) Make a "user.routes.js" file inside "routes" folder
+      ###### user.routes.js file
+            import { Router } from "express";
+            import { registerUser } from "../controllers/user.controller.js";
+            
+            const router = Router()
+            
+            router.route("/register").post(registerUser)
+            
+            export default router
+   3) Import routes inside app.js file and declaration of routes
+      ###### app.js file
+            import express from "express";
+            import cors from "cors"
+            import cookieParser from "cookie-parser";
+            
+            const app = express()
+            
+            app.use(cors({
+                origin: process.env.CORS_ORIGIN,
+                credentials: true
+            }))
+            
+            app.use(express.json({limit: "16kb"}))
+            app.use(express.urlencoded({extended: true, limit: "16kb"}))
+            app.use(express.static("public"))
+            app.use(cookieParser())
+            
+            //routes import
+            import userRouter from './routes/user.routes.js'
+            
+            //routes declaration
+            app.use("/api/v1/users", userRouter)
+            
+            //http://localhost:8000/api/v1/users/register
+            
+            export {app} // it is same as 'export default app'
+   4) Open Postman -> Collections -> Open new tab -> select POST and enter url http://localhost:8000/api/v1/users/register and click on Send. If it is "Ok" app run successfully.
+   5) Done for this lec
+
+</br>
+
+**************************************************************************************
+
+## Lec 13: 
+
+   1) v
+
+
