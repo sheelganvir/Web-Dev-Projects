@@ -1486,8 +1486,78 @@
 
 **************************************************************************************
 
-## Lec 13: 
+## Lec 13: Logic Building and Register Controller 
 
-   1) v
+   1) Inside controller.js file -> inside registerUser method
+      - Firstly get user details from the frontend then
+      - Check validation then
+      - Check if user already exist(by username, email)
+      - Check for images, check for avatar
+      - Upload them to cloudinary, check if avatar is uploaded
+      - Create user object - Create entry in db
+      - Remove password and refresh token field from response
+      - Check for user creation
+      - return res
+   2) Take data from req.body
+      ######
+            const registerUser = asyncHandler(async(req, res) => {
+                const {fullName, email, username, password} = req.body
+                console.log("email: ", email);
+            });
+      Now, check if it working, go to postman -> enter URL "http://localhost:8000/api/v1/users/register" under POST request.
+      Go to body -> select raw -> JSON ->
+      ######
+            {
+                "email": "dfmlkds@.com",
+                "password": ""
+            }
+      Now, click on SEND -> see in vscode terminal, you will see the email is showing
+   3) For file handling,
+      - Go to 'user.routes.js' file -> from multer.middleware.js import upload inside 'user.routes.js' file
+      ######
+            import {upload} from "../middlewares/multer.middleware.js"
+      - Middle acts in the middle as a checker, if someone is requesting in /register route then the registerUser method executes.
+      - But we want before execute any method it must pass through the middleware
+      - For that inject middleware (here upload.fields) before registerUser method
+        ###### user.routes.js file
+              router.route("/register").post(
+                   upload.fields([
+                       {
+                           name: "avatar",
+                           maxCount: 1
+                       },
+                       {
+                           name: "coverImage",
+                           maxCount: 1
+                       }
+                   ]),
+                   registerUser)
+        Now we can send Images
+   4) Now validation :
+      - Go to user.controller.js
+      - Import ApiError from ApiError.js
+        ######
+              import {ApiError} from "../utils/ApiError.js"
+      - Inside registerUser method add if condition and pass array and apply method 'some' 
+         (A function that accepts up to three arguments. The some method calls the predicate function for each element in the array until the predicate return a value which is coercible to the Boolean value true, or until the end of the array.)
+      - Apply field. If any of the fields returns true it means the field is empty.
+        ######
+              if(
+                  [fullName, email, username, password].some((field) => field?.trim() === "")
+              ) {
+                  throw new ApiError(400, "All fields are required")
+              }
+   5) Now, Check if user already exist(by username, email) :
+      
+
+
+
+
+
+
+
+
+
+
 
 
