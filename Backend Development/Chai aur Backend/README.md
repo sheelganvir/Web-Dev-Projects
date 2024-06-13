@@ -1548,6 +1548,30 @@
                   throw new ApiError(400, "All fields are required")
               }
    5) Now, Check if user already exist(by username, email) :
+      - Go to user.controller.js file and import User
+        ######
+              import {User} from "../models/user.model.js"
+      - This user can directly contact with the database because it is made with mongoose (see last line of user.model.js file)
+      - Now ask the database if there any user exists with these credentials (email or username) by User.findOne and store inside const. And Of user exist throw ApiError
+        ######
+                const existedUser = User.findOne({
+                    $or: [{ username }, { email }]
+                })
+            
+                if (existedUser) {
+                    throw new ApiError(409, "User with email or username already exists")
+                }
+   6) Now, check for images, check for avatar
+      - GO to User.controller.js file
+      - Multer gives the access of files using "req.files" and look for the first property
+        ######
+             const avatarLocalPath = req.files?.avatar[0]?.path;
+             const coverImageLocalPath = req.files?.coverImage[0]?.path;
+         
+             if(!avatarLocalPath){
+                 throw new ApiError(400, "Avatar file is required")
+             }
+       
       
 
 
