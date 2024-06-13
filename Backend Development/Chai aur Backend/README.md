@@ -1075,7 +1075,9 @@
                        this.success = statusCode < 400
                    }
                }
-   11) Done for this lec
+
+               export {ApiResponse}
+   12) Done for this lec
 </br>
 
 **********************************************************************************
@@ -1254,7 +1256,7 @@
                userSchema.pre("save", async function (next) {
                    if(!this.isModified("password")) return next();
                
-                   this.password = bcrypt.hash(this.password, 10)
+                   this.password = await bcrypt.hash(this.password, 10)
                    next()
                })
                
@@ -1575,7 +1577,56 @@
       - Go to 'user.controller.js' file and import 'uploadOnCloudinary' from ' cloudinary.js
         ######
               import {uploadOnCloudinary} from "../utils/cloudinary.js"
-      - 36:44
+      - Upload avatar, coverImage file on cloudinary...it will take time to upload so use await
+        ######
+              const avatar = await uploadOnCloudinary(avatarLocalPath)
+              const coverImage = await uploadOnCloudinary(coverImageLocalPath)
+              if (!avatar) {
+                 throw new ApiError(400, "Avatar file is required")
+              }
+   8) Now,  Create user object - Create entry in db
+      - Go to User.controller.js file
+      - Using .create method
+        ######
+              User.create({
+                 fullName,
+                 avatar: avatar.url,
+                 coverImage: coverImage?.url || "",
+                 email,
+                 password,
+                 username: username.toLowerCase()
+              })
+   9) Now, Remove password and refresh token field from response
+       - Go to User.controller.js file
+         ######
+               const createdUser = await User.findById(user._id).select(
+                    "-password -refreshToken"
+                )
+   10) Now, Check for user creation
+       - Go to User.controller.js file
+         ######
+                if(!createdUser){
+                    throw new ApiError(500, "Something went wrong while registering the user")
+                }
+   11) Now, return res
+       - Go to user.controller.js file
+       - import ApiResponse
+         ######
+               import { ApiResponse } from "../utils/ApiResponse.js";
+       - return response
+         ######
+               return res.status(201).json(
+                    new ApiResponse(200, createdUser, "User registered Successfully")
+                )
+   12) Done for this lec           
+</br>
+
+**************************************************************************************
+
+## Lec 14: 
+              
+      
+
 
        
       
