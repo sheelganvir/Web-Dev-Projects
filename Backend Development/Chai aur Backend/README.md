@@ -1571,6 +1571,12 @@
              if(!avatarLocalPath){
                  throw new ApiError(400, "Avatar file is required")
              }
+   7) Now, Upload them to cloudinary, check if avatar is uploaded
+      - Go to 'user.controller.js' file and import 'uploadOnCloudinary' from ' cloudinary.js
+        ######
+              import {uploadOnCloudinary} from "../utils/cloudinary.js"
+      - 36:44
+
        
       
 
