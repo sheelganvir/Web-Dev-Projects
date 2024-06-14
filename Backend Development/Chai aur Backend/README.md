@@ -941,7 +941,7 @@
             import connectDB from "./db/index.js";
             
             dotenv.config({
-                path: './env'
+                path: './.env'
             })
             
             connectDB()
@@ -1345,7 +1345,7 @@
                            resource_type: "auto"
                        })
                        //file has been uploaded successfully 
-                       console.log("File is uploaded on Cloudinary: ", response.url);
+                       //console.log("File is uploaded on Cloudinary: ", response.url);
                        return response;
                
                    } catch(error){
@@ -1373,7 +1373,7 @@
 
             const storage = multer.diskStorage({
                 destination: function (req, file, cb) {
-                  cb(null, '/public/temp')
+                  cb(null, './public/temp')
                 },
                 filename: function (req, file, cb) {
                   const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
@@ -1648,7 +1648,7 @@
                        throw new ApiError(400, "All fields are required")
                    }
                
-                   const existedUser = User.findOne({
+                   const existedUser = await User.findOne({
                        $or: [{ username }, { email }]
                    })
                
@@ -1670,7 +1670,7 @@
                        throw new ApiError(400, "Avatar file is required")
                    }
                
-                   User.create({
+                   const user = await User.create({
                        fullName,
                        avatar: avatar.url,
                        coverImage: coverImage?.url || "",
@@ -1698,8 +1698,137 @@
 
 **************************************************************************************
 
-## Lec 14: 
-              
+## Lec 14: How to use Postman
+
+   1) Go to postman -> Enter link "http://localhost:8000/api/v1/users/register" select POST.
+      Go to body -> form-data -> enter data linke this
+      ![image](https://github.com/sheelganvir/Web-Dev-Projects/assets/128175450/f0f80995-c249-4f8c-bc22-f8a0bd0fd19d)
+      Clink on Send
+   2) On cloudinary.com -> Media Explorer -> you can see the uploaded files
+   3) After uploading a file, unlink it from cloudinary by fs.unlinkSync(localFilePath)
+      ###### cloudinary.js
+            import { v2 as cloudinary } from "cloudinary";
+            import fs from "fs"
+            
+            cloudinary.config({ 
+                cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+                api_key: process.env.CLOUDINARY_API_KEY, 
+                api_secret: process.env.CLOUDINARY_API_SECRET 
+            });
+            
+            const uploadOnCloudinary = async (localFilePath) => {
+                try{
+                    if(!localFilePath) return null
+                    //upload the file on cloudinary
+                    const response = await cloudinary.uploader.upload
+                    (localFilePath, {
+                        resource_type: "auto"
+                    })
+                    //file has been uploaded successfully 
+                    //console.log("File is uploaded on Cloudinary: ", response.url);
+                    fs.unlinkSync(localFilePath)
+                    return response;
+            
+                } catch(error){
+                    fs.unlinkSync(localFilePath)    //remove the local saved temporary file as the upload operation got failed
+                    return null;
+                }
+            }
+            
+            export {uploadOnCloudinary}
+   4) user.controller.js file
+      ######
+            import { asyncHandler } from "../utils/asyncHandler.js";
+            import {ApiError} from "../utils/ApiError.js"
+            import {User} from "../models/user.model.js"
+            import {uploadOnCloudinary} from "../utils/cloudinary.js"
+            import { ApiResponse } from "../utils/ApiResponse.js";
+            
+            const registerUser = asyncHandler(async(req, res) => {
+                /*
+                  - Firstly get user details from the frontend then
+                  - Check validation then
+                  - Check if user already exist(by username, email)
+                  - Check for images, check for avatar
+                  - Upload them to cloudinary, check if avatar is uploaded
+                  - Create user object - Create entry in db
+                  - Remove password and refresh token field from response
+                  - Check for user creation
+                  - return res
+                */
+            
+                const {fullName, email, username, password} = req.body
+                console.log("email: ", email);
+            
+                if(
+                    [fullName, email, username, password].some((field) => field?.trim() === "")
+                ) {
+                    throw new ApiError(400, "All fields are required")
+                }
+            
+                const existedUser = await User.findOne({
+                    $or: [{ username }, { email }]
+                })
+            
+                if (existedUser) {
+                    throw new ApiError(409, "User with email or username already exists")
+                }
+            
+                const avatarLocalPath = req.files?.avatar[0]?.path;
+                //const coverImageLocalPath = req.files?.coverImage[0]?.path;
+                let coverImageLocalPath;
+                if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length>0){
+                    coverImageLocalPath = req.files.coverImage[0].path
+                }
+            
+                if(!avatarLocalPath){
+                    throw new ApiError(400, "Avatar file is required")
+                }
+            
+                const avatar = await uploadOnCloudinary(avatarLocalPath)
+                const coverImage = await uploadOnCloudinary(coverImageLocalPath)
+            
+                if (!avatar) {
+                    throw new ApiError(400, "Avatar file is required")
+                }
+            
+                const user = await User.create({
+                    fullName,
+                    avatar: avatar.url,
+                    coverImage: coverImage?.url || "",
+                    email,
+                    password,
+                    username: username.toLowerCase()
+                })
+            
+                const createdUser = await User.findById(user._id).select(
+                    "-password -refreshToken"
+                )
+            
+                if(!createdUser){
+                    throw new ApiError(500, "Something went wrong while registering the user")
+                }
+            
+                return res.status(201).json(
+                    new ApiResponse(200, createdUser, "User registered Successfully")
+                )
+            });
+            
+            export {registerUser}
+   5) Go to postman -> Collections -> Blank Collection -> Add request -> Name it 'register' ans POST request -> Enter this url 'http://localhost:8000/api/v1/users/register'
+   6) Go to save as -> New folder -> Name it 'user'
+   7) Copy the URL "http://localhost:8000/api/v1" -> Go to environment -> Create on '+' icon -> Name it 'youtube' -> Variable = server -> initial value and current value = http://localhost:8000/api/v1
+   8) Go here ![image](https://github.com/sheelganvir/Web-Dev-Projects/assets/128175450/62331476-2f65-4f2d-9b01-71ca5beb65f4)
+   9) Go to collections -> post register -> enter URL "{{server}}/users/register" -> save and click on send
+   10) Go to body -> Select form-data -> send
+       ![image](https://github.com/sheelganvir/Web-Dev-Projects/assets/128175450/29a27edd-4ed4-4e95-9f78-9a1d2da1af07)
+   11) Done for this lec
+       </br>
+
+**************************************************************************************
+
+## Lec 15: 
+
       
 
 
