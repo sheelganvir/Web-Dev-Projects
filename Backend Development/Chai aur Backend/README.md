@@ -1827,7 +1827,156 @@
 
 **************************************************************************************
 
-## Lec 15: 
+## Lec 15: Access Refresh Token, Middle and cookies in Backend
+
+   1) There are two types of token : i) Access Token, ii) Refresh Token
+   2) Access Token: They are short lived
+   3) Refresh Token: They are long lived.
+   4) Tokens are generally used for logged in time duration
+   5) Inside user.controller.js file create a loginUser method
+      ######
+            const loginUser = asyncHandler(async (req,res) => {
+                // 1) Take data from req body
+                // 2)  username or email based login
+                // 3) find the user
+                // 4) password check
+                // 5) generate access and refresh token
+                // 6) send tokens in form of cookies
+            
+            
+            })
+            
+            export {
+                registerUser,
+                loginUser
+            }
+   6) Now, inside loginUser method we need to perform the above steps.
+   7) Now step -1) Take data from req body
+      - make a method which takes email, username, password from the req.body
+        ######
+              const {email, username, password} = req.body
+
+   8) Now step -2)  username or email based login
+      - if either username or e-mail is wrong, it will throw an API error that username or e-mail is required.
+      ######
+            if(!username || !email){
+                 throw new ApiError(400, "username or email is required")
+            }
+   10) Now step-  3) find the user is exist from the database
+      - We use mongoDB operator called $or
+      - Since database is in different continent so we use await
+      - and if the user does not found return user does not exist.
+      - If the user is found, check the password.
+       ######
+             if(!username || !email){
+                 throw new ApiError(400, "username or email is required")
+             }
+         
+             const user = await User.findOne({
+                 $or: [{username}, {email}]
+             })
+         
+             if(!user){
+                 throw new ApiError(404, "User does not exist")
+             }
+   12) Now step- 4) password check
+       ######
+             const isPasswordValid = await user.isPasswordCorrect(password)
+
+             if(!isPasswordValid){
+                 throw new ApiError(401, "Invalid user credentials")
+             }
+                
+   13) Now step - 5) generate access and refresh token
+       - Generate it as a global method method outside the loginUser method so that we can acces it anywhere
+       - Inside generateAccessAndRefreshTokens method find userId
+       - generate access token and store it inside a constant access token.
+       - Generate a refresh token and store it inside a constant refresh token.
+       - We will pass the access token to the user, but save the refresh token in the database.
+       - There should be no validation check before saving.
+       - Return the access token and refresh token.
+       ######
+             const generateAccessAndRefreshTokens = async(userId) => {
+                try {
+                    const user = await User.findById(userId)
+                    const accessToken = user.generateAccessToken()
+                    const refreshToken = user.generateRefreshToken()
+                    
+                    user.refreshToken = refreshToken
+                    await user.save({ validateBeforeSave: false })
+                    return {accessToken, refreshToken}
+            
+                } catch (error) {
+                    throw new ApiError(500, "Something went wrong while generating refresh and access token.")
+                }
+            }
+       - Now inside login user method. Call generateAccessAndRefreshTokens
+         ######
+               const {accessToken, refreshToken} = await generateAccessAndRefreshTokens(user._id)
+               const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
+
+14) Now step - 6) send tokens in form of cookies
+    - Inside login user method create an object
+    - By default anyone can modify the cookies from the frontend
+    - By doing HTTP only true and secure true. We can give the access to modify cookies only to the backend. No one can modify it from the front end.
+    - Now return response
+      ######
+            const options = {
+                 httpOnly: true,
+                 secure: true
+             }
+         
+             return res 
+             .status(200)
+             .cookie("accessToken", accessToken, options)
+             .cookie("refreshToken", refreshToken, options)
+             .json(
+                 new ApiResponse(
+                     200,
+                     {
+                         user: loggedInUser, accessToken,
+                         refreshToken
+                     },
+                     "User logged in successfully"
+                 )
+             )
+      - Now user is logged in.
+15) Now it's time for logout.
+16) before it. We will create a new middleware to get the user id for log out
+17) Create a new middleware inside middlewares folder name "auth.middleware.js" It will verify if user is exist or not.
+18) it verifies on the basis of tokens using cookies.
+19) ###### auth.middleware.js
+         import { ApiError } from "../utils/ApiError";
+         import { asyncHandler } from "../utils/asyncHandler";
+         import jwt from "jsonwebtoken";
+         import { User } from "../models/user.model";
+         
+         export const verifyJWT = asyncHandler(async(req,res,next) => {
+             try {
+                 const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ","")
+                 if(!token){
+                     throw new ApiError(401, "Unauthorized request")
+                 }
+             
+                 const decodedTOken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+             
+                 const user = await User.findById(decodedTOken?._id).select("-password -refreshToken")
+             
+                 if(!user){
+                     throw new ApiError(401, "Invalid access token.")
+                 }
+             
+                 req.user = user;
+                 next()
+             } catch (error) {
+                 throw new ApiError(401, error?.message || "Invalid access token")
+             }
+         })
+   20) 
+             
+   
+
+      
 
       
 
