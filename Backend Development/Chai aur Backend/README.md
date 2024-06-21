@@ -2045,7 +2045,7 @@
              
              const {email, username, password} = req.body
          
-             if(!username || !email){
+             if(!username && !email){
                  throw new ApiError(400, "username or email is required")
              }
          
@@ -2102,10 +2102,10 @@
 18) Create a new middleware inside middlewares folder name "auth.middleware.js" It will verify if user is exist or not.
 19) it verifies on the basis of tokens using cookies.
 20) ###### auth.middleware.js
-         import { ApiError } from "../utils/ApiError";
-         import { asyncHandler } from "../utils/asyncHandler";
+         import { ApiError } from "../utils/ApiError.js";
+         import { asyncHandler } from "../utils/asyncHandler.js";
          import jwt from "jsonwebtoken";
-         import { User } from "../models/user.model";
+         import { User } from "../models/user.model.js";
          
          export const verifyJWT = asyncHandler(async(req, _,next) => {
              try {
@@ -2183,7 +2183,26 @@
                 .json(new ApiResponse(200, {}, "User logged Out"))
             
             })
-             
+   23) Done for this lec
+       </br>
+
+**************************************************************************************
+
+## Lec 16: Access Refresh Token, Middle and cookies in Backend
+
+   1) Go to Postman -> go to collection -> youtube -> user -> register -> Update the url from /register to /login -> Go to Body -> Body -> raw -> JSON -> write below code -> save as -> youtube -> user -> write login in place of register in the top -> click on save -> SEND
+      ######
+            {
+                "email":"ganvir@gmail.com",
+                "password":"chaiaurcode"
+            }
+   2) If it works, login page works successfully
+   3) You can see in postman that cookies is generated
+   4) Now edit the URL from /login to /logout -> s4ave as -> type logout -> save -> remove everything from body -> SEND
+   5) If it runs successfully, logout page is working
+   6) cookies will be removed
+   7) 
+      
    
 
       
