@@ -2200,7 +2200,7 @@
    3) You can see in postman that cookies is generated
    4) Now edit the URL from /login to /logout -> s4ave as -> type logout -> save -> remove everything from body -> SEND
    5) If it runs successfully, logout page is working
-   6) cookies will be removed
+   6) cookies will be removed, page is logged out
    7) Now make a end point to refresh the token
    8) End point of refresh, access token
       - 
