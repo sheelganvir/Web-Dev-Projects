@@ -28,7 +28,7 @@ console.log(typeof null);   //object
     typeof 3.14                   // Returns "number"
     typeof NaN                    // Returns "number"
     typeof false                  // Returns "boolean"
-    typeof [1,2,3,4]              // Returns "object"
+    typeof [1,2,3,4]              // Returns "object"    //In JavaScript, arrays are technically objects, so typeof always returns "object" for arrays.
     typeof {name:'John', age:34}  // Returns "object"
     typeof new Date()             // Returns "object"
     typeof function () {}         // Returns "function"
@@ -48,7 +48,7 @@ console.log(typeof null);   //object
 
 const id = Symbol('123')
 const anotherId = Symbol('123')
-
+// In JavaScript, Symbol values are unique, even if they have the same description
 console.log(id==anotherId);     //false
 
 const bigNumber = 34567897815566558n    //bigInt datatype
