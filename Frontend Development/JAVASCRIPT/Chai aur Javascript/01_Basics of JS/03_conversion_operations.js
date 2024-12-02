@@ -16,6 +16,17 @@ console.log(typeof valueAgeInNumber);
 console.log(valueAgeInNumber);  //Not a number (NaN) since 33abc is not a number
 
 /*
+If you want to extract the numeric part from the string, you can use parseInt() or parseFloat()
+
+let age = "35abc";
+let valueAgeInNumber = parseInt(age, 10); // Parses up to the first non-numeric character
+
+console.log(typeof valueAgeInNumber); // "number"
+console.log(valueAgeInNumber);        // 35
+
+*/
+
+/*
     "33" => 33
     "33abc" => NaN
     true => 1; false => 0
